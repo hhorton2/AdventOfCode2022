@@ -6,12 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Threading.Tasks.Dataflow" Version="7.0.0" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="7.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Day01\input.txt" />
-      <None Remove="Day01\example.txt" />
+        <None Remove="Day01\input.txt"/>
+        <None Remove="Day01\example.txt"/>
     </ItemGroup>
 
 </Project>

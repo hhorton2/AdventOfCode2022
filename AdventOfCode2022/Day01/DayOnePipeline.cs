@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
@@ -8,7 +7,6 @@ namespace AdventOfCode2022.Day01
 {
     public static class DayOnePipeline
     {
-
         public static string SolvePartOne(string filename)
         {
             InputBlocks.GetFileLines.LinkTo(LinesToRations, DataflowConstants.DefaultLinkOptions);
@@ -52,6 +50,7 @@ namespace AdventOfCode2022.Day01
                         currentRations.Add(long.Parse(line));
                     }
                 }
+
                 rations.Add(currentRations);
 
                 return rations;
@@ -61,45 +60,48 @@ namespace AdventOfCode2022.Day01
             new TransformBlock<IEnumerable<long>, long>(rations => rations.Sum());
 
         private static readonly BatchBlock<long> CalorieBuffer = new BatchBlock<long>(int.MaxValue);
-        private static readonly TransformBlock<IEnumerable<long>,long> HighestCalorieFinder = new TransformBlock<IEnumerable<long>,long>(totals =>
-        {
-            var highest = long.MinValue;
-            foreach (var total in totals)
-            {
-                if (total > highest)
-                {
-                    highest = total;
-                }
-            }
 
-            return highest;
-        });
-        
-        private static readonly TransformBlock<IEnumerable<long>,long> TopThreeHighestCalorieFinder = new TransformBlock<IEnumerable<long>,long>(totals =>
-        {
-            var highest = long.MinValue;
-            var second = long.MinValue;
-            var third = long.MinValue;
-            foreach (var currentTotal in totals)
+        private static readonly TransformBlock<IEnumerable<long>, long> HighestCalorieFinder =
+            new TransformBlock<IEnumerable<long>, long>(totals =>
             {
-                if (currentTotal > highest)
+                var highest = long.MinValue;
+                foreach (var total in totals)
                 {
-                    third = second;
-                    second = highest;
-                    highest = currentTotal;
+                    if (total > highest)
+                    {
+                        highest = total;
+                    }
                 }
-                else if (currentTotal > second)
-                {
-                    third = second;
-                    second = currentTotal;
-                }
-                else if (currentTotal > third)
-                {
-                    third = currentTotal;
-                }
-            }
 
-            return highest + second + third;
-        });
+                return highest;
+            });
+
+        private static readonly TransformBlock<IEnumerable<long>, long> TopThreeHighestCalorieFinder =
+            new TransformBlock<IEnumerable<long>, long>(totals =>
+            {
+                var highest = long.MinValue;
+                var second = long.MinValue;
+                var third = long.MinValue;
+                foreach (var currentTotal in totals)
+                {
+                    if (currentTotal > highest)
+                    {
+                        third = second;
+                        second = highest;
+                        highest = currentTotal;
+                    }
+                    else if (currentTotal > second)
+                    {
+                        third = second;
+                        second = currentTotal;
+                    }
+                    else if (currentTotal > third)
+                    {
+                        third = currentTotal;
+                    }
+                }
+
+                return highest + second + third;
+            });
     }
 }
