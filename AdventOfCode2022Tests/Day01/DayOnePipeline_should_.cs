@@ -17,7 +17,7 @@ public class DayOnePipeline_should_
     [Fact]
     public void SolvePartOneExample()
     {
-        var result = DayOnePipeline.SolvePartOne("./Day01/example.txt");
+        var result = new DayOnePipeline().SolvePartOne("./Day01/example.txt");
 
         result.Should().Be("24000");
     }
@@ -25,7 +25,7 @@ public class DayOnePipeline_should_
     [Fact]
     public void SolvePartOne()
     {
-        var result = DayOnePipeline.SolvePartOne("./Day01/input.txt");
+        var result = new DayOnePipeline().SolvePartOne("./Day01/input.txt");
 
         _output.WriteLine(result);
     }
@@ -33,7 +33,7 @@ public class DayOnePipeline_should_
     [Fact]
     public void SolvePartTwoExample()
     {
-        var result = DayOnePipeline.SolvePartTwo("./Day01/example.txt");
+        var result = new DayOnePipeline().SolvePartTwo("./Day01/example.txt");
 
         result.Should().Be("45000");
     }
@@ -41,7 +41,7 @@ public class DayOnePipeline_should_
     [Fact]
     public void SolvePartTwo()
     {
-        var result = DayOnePipeline.SolvePartTwo("./Day01/input.txt");
+        var result = new DayOnePipeline().SolvePartTwo("./Day01/input.txt");
 
         _output.WriteLine(result);
     }

@@ -5,35 +5,37 @@ using AdventOfCode2022.Common;
 
 namespace AdventOfCode2022.Day01
 {
-    public static class DayOnePipeline
+    public class DayOnePipeline
     {
-        public static string SolvePartOne(string filename)
+        public string SolvePartOne(string filename)
         {
-            InputBlocks.GetFileLines.LinkTo(LinesToRations, DataflowConstants.DefaultLinkOptions);
-            LinesToRations.LinkTo(SumRationCalories, DataflowConstants.DefaultLinkOptions);
-            SumRationCalories.LinkTo(CalorieBuffer, DataflowConstants.DefaultLinkOptions);
-            CalorieBuffer.LinkTo(HighestCalorieFinder, DataflowConstants.DefaultLinkOptions);
-            InputBlocks.GetFileLines.Post(filename);
-            InputBlocks.GetFileLines.Complete();
-            var result = "" + HighestCalorieFinder.Receive();
-            HighestCalorieFinder.Completion.Wait();
+            var getAllLineBlock = new InputBlocks().GetFileLines;
+            getAllLineBlock.LinkTo(_linesToRations, DataflowConstants.DefaultLinkOptions);
+            _linesToRations.LinkTo(_sumRationCalories, DataflowConstants.DefaultLinkOptions);
+            _sumRationCalories.LinkTo(_calorieBuffer, DataflowConstants.DefaultLinkOptions);
+            _calorieBuffer.LinkTo(_highestCalorieFinder, DataflowConstants.DefaultLinkOptions);
+            getAllLineBlock.Post(filename);
+            getAllLineBlock.Complete();
+            var result = "" + _highestCalorieFinder.Receive();
+            _highestCalorieFinder.Completion.Wait();
             return result;
         }
 
-        public static string SolvePartTwo(string filename)
+        public string SolvePartTwo(string filename)
         {
-            InputBlocks.GetFileLines.LinkTo(LinesToRations, DataflowConstants.DefaultLinkOptions);
-            LinesToRations.LinkTo(SumRationCalories, DataflowConstants.DefaultLinkOptions);
-            SumRationCalories.LinkTo(CalorieBuffer, DataflowConstants.DefaultLinkOptions);
-            CalorieBuffer.LinkTo(TopThreeHighestCalorieFinder, DataflowConstants.DefaultLinkOptions);
-            InputBlocks.GetFileLines.Post(filename);
-            InputBlocks.GetFileLines.Complete();
-            var result = "" + TopThreeHighestCalorieFinder.Receive();
-            TopThreeHighestCalorieFinder.Completion.Wait();
+            var getAllLineBlock = new InputBlocks().GetFileLines;
+            getAllLineBlock.LinkTo(_linesToRations, DataflowConstants.DefaultLinkOptions);
+            _linesToRations.LinkTo(_sumRationCalories, DataflowConstants.DefaultLinkOptions);
+            _sumRationCalories.LinkTo(_calorieBuffer, DataflowConstants.DefaultLinkOptions);
+            _calorieBuffer.LinkTo(_topThreeHighestCalorieFinder, DataflowConstants.DefaultLinkOptions);
+            getAllLineBlock.Post(filename);
+            getAllLineBlock.Complete();
+            var result = "" + _topThreeHighestCalorieFinder.Receive();
+            _topThreeHighestCalorieFinder.Completion.Wait();
             return result;
         }
 
-        private static readonly TransformManyBlock<string[], IEnumerable<long>> LinesToRations =
+        private readonly TransformManyBlock<string[], IEnumerable<long>> _linesToRations =
             new TransformManyBlock<string[], IEnumerable<long>>(lines =>
             {
                 var rations = new List<List<long>>();
@@ -56,12 +58,12 @@ namespace AdventOfCode2022.Day01
                 return rations;
             });
 
-        private static readonly TransformBlock<IEnumerable<long>, long> SumRationCalories =
+        private readonly TransformBlock<IEnumerable<long>, long> _sumRationCalories =
             new TransformBlock<IEnumerable<long>, long>(rations => rations.Sum());
 
-        private static readonly BatchBlock<long> CalorieBuffer = new BatchBlock<long>(int.MaxValue);
+        private readonly BatchBlock<long> _calorieBuffer = new BatchBlock<long>(int.MaxValue);
 
-        private static readonly TransformBlock<IEnumerable<long>, long> HighestCalorieFinder =
+        private readonly TransformBlock<IEnumerable<long>, long> _highestCalorieFinder =
             new TransformBlock<IEnumerable<long>, long>(totals =>
             {
                 var highest = long.MinValue;
@@ -76,7 +78,7 @@ namespace AdventOfCode2022.Day01
                 return highest;
             });
 
-        private static readonly TransformBlock<IEnumerable<long>, long> TopThreeHighestCalorieFinder =
+        private readonly TransformBlock<IEnumerable<long>, long> _topThreeHighestCalorieFinder =
             new TransformBlock<IEnumerable<long>, long>(totals =>
             {
                 var highest = long.MinValue;
